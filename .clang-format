@@ -1,0 +1,21 @@
+﻿---
+BasedOnStyle: Chromium
+AccessModifierOffset: -4
+AlignAfterOpenBracket: DontAlign
+AlignOperands: DontAlign
+AlwaysBreakBeforeMultilineStrings: false
+BinPackArguments: false
+BreakBeforeBraces: WebKit
+ColumnLimit: 120
+ContinuationIndentWidth: 8
+EmptyLineBeforeAccessModifier: Always
+FixNamespaceComments: false
+IncludeBlocks: Regroup
+IndentWidth: 4
+ObjCBlockIndentWidth: 4
+SpaceBeforeCpp11BracedList: true
+SpaceInEmptyBlock: true
+SpacesBeforeTrailingComments: 1
+Standard: Latest
+...
+
