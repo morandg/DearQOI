@@ -18,10 +18,7 @@
 
 #include <iostream>
 
-#include <SDL.h>
-
-#include "Logger.h"
-#include "MainWindow.h"
+#include "MainLoop.h"
 
 struct CmdLineArgs {
     spdlog::level::level_enum logLevel = spdlog::level::info;
@@ -70,7 +67,6 @@ ParseStatus parseCommandLine(int argc, char *argv[], CmdLineArgs &cmdLineArgs) {
     return ParseStatus::SUCCESS;
 }
 
-
 int main(int argc, char* argv[]) {
     DearQOI::MainWindow mainWindow;
     int status;
@@ -86,15 +82,12 @@ int main(int argc, char* argv[]) {
     }
 
     DearQOI::Logger::Init(cmdLineArgs.logLevel);
-
     status = mainWindow.init();
     if (status) {
         return status;
     }
 
-    DearQOI::Logger::Main()->warn("Main loop not implemented!");
-    mainWindow.update();
-    SDL_Delay(10000);
+    status = DearQOI::MainLoop::run(mainWindow);
 
     DearQOI::Logger::Main()->info("Exiting with code {}", status);
     return status;
