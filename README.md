@@ -1,6 +1,9 @@
 # DearQOI
 A QOI image viewer written with Dear IMGUI.
 
+# Depedencies
+* SDL2
+
 # Build
 **TODO**
 
