@@ -113,6 +113,19 @@ void MainWindow::drawMainMenu() {
                 }
                 ImGui::EndMenu();
             }
+
+            static bool wasFullScreen = false;
+            bool isFullScreen = wasFullScreen;
+            ImGui::Checkbox("Full screen", &isFullScreen);
+            if (isFullScreen != wasFullScreen) {
+                Uint32 sdlFlags = 0;
+
+                wasFullScreen = isFullScreen;
+                if(isFullScreen)
+                    sdlFlags |= SDL_WINDOW_FULLSCREEN;
+                SDL_SetWindowFullscreen(mSdlWindow, sdlFlags);
+            }
+
             ImGui::EndMenu();
         }
 
