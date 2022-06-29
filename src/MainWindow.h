@@ -37,10 +37,12 @@ private:
     bool mShowImguiMetrics = false;
     bool mShowImguiAbout = false;
     bool mShowAbout = false;
+    bool mShowLoadQoiDialog = false;
 
     void drawWidgets();
     void drawMainMenu();
     void drawAboutWindow();
+    void drawLoadQoiDialog();
     int initSdl();
     int initImgui();
 };

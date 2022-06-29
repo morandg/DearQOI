@@ -88,29 +88,29 @@ void MainWindow::drawWidgets() {
         ImGui::ShowAboutWindow(&mShowImguiAbout);
     if (mShowAbout)
         drawAboutWindow();
+    if (mShowLoadQoiDialog)
+        drawLoadQoiDialog();
 }
 
 void MainWindow::drawMainMenu() {
     if( ImGui::BeginMainMenuBar()) {
 
         if (ImGui::BeginMenu("File")) {
-            if (ImGui::MenuItem("Exit")) {
+            if (ImGui::MenuItem("Load image"))
+                mShowLoadQoiDialog = true;
+            if (ImGui::MenuItem("Exit"))
                 mIsRunning = false;
-            }
             ImGui::EndMenu();
         }
 
         if (ImGui::BeginMenu("Options")) {
             if (ImGui::BeginMenu("Theme")) {
-                if (ImGui::MenuItem("Dark")) {
+                if (ImGui::MenuItem("Dark"))
                     ImGui::StyleColorsDark();
-                }
-                if (ImGui::MenuItem("Classic")) {
+                if (ImGui::MenuItem("Classic"))
                     ImGui::StyleColorsClassic();
-                }
-                if (ImGui::MenuItem("Light")) {
+                if (ImGui::MenuItem("Light"))
                     ImGui::StyleColorsLight();
-                }
                 ImGui::EndMenu();
             }
 
@@ -130,22 +130,18 @@ void MainWindow::drawMainMenu() {
         }
 
         if (ImGui::BeginMenu("DearIMGUI")) {
-            if (ImGui::MenuItem("Demos")) {
+            if (ImGui::MenuItem("Demos"))
                 mShowImguiDemo = true;
-            }
-            if (ImGui::MenuItem("Metrics")) {
+            if (ImGui::MenuItem("Metrics"))
                 mShowImguiMetrics = true;
-            }
-            if (ImGui::MenuItem("About")) {
+            if (ImGui::MenuItem("About"))
                 mShowImguiAbout = true;
-            }
             ImGui::EndMenu();
         }
 
         if (ImGui::BeginMenu("Help")) {
-            if (ImGui::MenuItem("About DearQOI")) {
+            if (ImGui::MenuItem("About DearQOI"))
                 mShowAbout = true;
-            }
             ImGui::EndMenu();
         }
 
@@ -154,17 +150,31 @@ void MainWindow::drawMainMenu() {
 }
 
 void MainWindow::drawAboutWindow() {
-    static constexpr float ABOUT_WIDTH = 200;
-
     ImGui::SetNextWindowPos( {50, 50}, ImGuiCond_Once);
-    ImGui::SetNextWindowSize( {ABOUT_WIDTH, 0});
 
-    ImGui::Begin("About DearQOI", &mShowAbout, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+    ImGui::Begin("About DearQOI", &mShowAbout, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
     ImGui::TextWrapped("DearIMGUI and QOI image format demo application for Bytes@Work");
-    if (ImGui::Button("Close", {ABOUT_WIDTH, 0})) {
+    if (ImGui::Button("Close", {200, 0})) {
         Logger::Main()->info("Close about DearQOI clicked!");
         mShowAbout = false;
     }
+
+    ImGui::End();
+}
+
+void MainWindow::drawLoadQoiDialog() {
+    ImGui::SetNextWindowPos( {50, 50}, ImGuiCond_Appearing);
+
+    ImGui::Begin("Load QOI image", nullptr,
+                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+    ImGui::Text("Enter a path to a QOI image");
+
+    if (ImGui::Button("OK"))
+        mShowLoadQoiDialog = false;
+    ImGui::SameLine();
+    if (ImGui::Button("Cancel"))
+        mShowLoadQoiDialog = false;
 
     ImGui::End();
 }
