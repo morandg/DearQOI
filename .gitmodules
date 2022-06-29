@@ -5,3 +5,6 @@
 [submodule "libs/spdlog"]
 	path = libs/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "libs/qoi"]
+	path = libs/qoi
+	url = https://github.com/phoboslab/qoi.git
