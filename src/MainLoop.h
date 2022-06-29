@@ -39,9 +39,13 @@ inline int run(MainWindow &mainWindow) {
             if (event.type == SDL_QUIT) {
                 return 0;
             }
+            mainWindow.processEvent(event);
         }
 
-        mainWindow.update();
+        if (!mainWindow.update()) {
+            Logger::Main()->info("Main window closed, breaking main loop");
+            return 0;
+        }
 
         // Limit FPS
         lastTick = SDL_GetTicks();

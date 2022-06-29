@@ -26,11 +26,23 @@ public:
     ~MainWindow();
 
     int init();
-    void update();
+    bool update();
+    void processEvent(const SDL_Event& event);
 
 private:
     SDL_Window* mSdlWindow = nullptr;
     SDL_GLContext mSdlGlContext = nullptr;
+    bool mIsRunning = true;
+    bool mShowImguiDemo = false;
+    bool mShowImguiMetrics = false;
+    bool mShowImguiAbout = false;
+    bool mShowAbout = false;
+
+    void drawWidgets();
+    void drawMainMenu();
+    void drawAboutWindow();
+    int initSdl();
+    int initImgui();
 };
 
 }

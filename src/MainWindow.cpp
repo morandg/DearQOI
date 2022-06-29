@@ -16,6 +16,10 @@
 
 #include <SDL_opengl.h>
 
+#include <imgui.h>
+#include <backends/imgui_impl_sdl.h>
+#include <backends/imgui_impl_opengl2.h>
+
 #include "Logger.h"
 #include "MainWindow.h"
 
@@ -25,15 +29,135 @@ MainWindow::MainWindow() {
 }
 
 MainWindow::~MainWindow() {
+    ImGui_ImplOpenGL2_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+
     if(mSdlWindow)
         SDL_DestroyWindow(mSdlWindow);
     if(mSdlGlContext)
         SDL_GL_DeleteContext(mSdlGlContext);
+
     SDL_Quit();
 }
 
 int MainWindow::init() {
-    if(SDL_Init(SDL_INIT_EVERYTHING)) {
+    int status;
+
+    status = initSdl();
+    if (status)
+        return status;
+    status = initImgui();
+    if (status)
+        return status;
+
+    Logger::Main()->info("Main window initialized!");
+
+    return status;
+}
+
+bool MainWindow::update() {
+    ImGui_ImplOpenGL2_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+
+    drawWidgets();
+
+    ImGuiIO& io = ImGui::GetIO();
+    glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ImGui::Render();
+    ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+    SDL_GL_SwapWindow(mSdlWindow);
+
+    return mIsRunning;
+}
+
+void MainWindow::processEvent(const SDL_Event& event) {
+    ImGui_ImplSDL2_ProcessEvent(&event);
+}
+
+void MainWindow::drawWidgets() {
+    drawMainMenu();
+
+    if (mShowImguiDemo)
+        ImGui::ShowDemoWindow(&mShowImguiDemo);
+    if (mShowImguiMetrics)
+        ImGui::ShowMetricsWindow(&mShowImguiMetrics);
+    if (mShowImguiAbout)
+        ImGui::ShowAboutWindow(&mShowImguiAbout);
+    if (mShowAbout)
+        drawAboutWindow();
+}
+
+void MainWindow::drawMainMenu() {
+    if( ImGui::BeginMainMenuBar()) {
+
+        if (ImGui::BeginMenu("File")) {
+            if (ImGui::MenuItem("Exit")) {
+                mIsRunning = false;
+            }
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Options")) {
+            if (ImGui::BeginMenu("Theme")) {
+                if (ImGui::MenuItem("Dark")) {
+                    ImGui::StyleColorsDark();
+                }
+                if (ImGui::MenuItem("Classic")) {
+                    ImGui::StyleColorsClassic();
+                }
+                if (ImGui::MenuItem("Light")) {
+                    ImGui::StyleColorsLight();
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("DearIMGUI")) {
+            if (ImGui::MenuItem("Demos")) {
+                mShowImguiDemo = true;
+            }
+            if (ImGui::MenuItem("Metrics")) {
+                mShowImguiMetrics = true;
+            }
+            if (ImGui::MenuItem("About")) {
+                mShowImguiAbout = true;
+            }
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Help")) {
+            if (ImGui::MenuItem("About DearQOI")) {
+                mShowAbout = true;
+            }
+            ImGui::EndMenu();
+        }
+
+        ImGui::EndMainMenuBar();
+    }
+}
+
+void MainWindow::drawAboutWindow() {
+    static constexpr float ABOUT_WIDTH = 200;
+
+    ImGui::SetNextWindowPos( {50, 50}, ImGuiCond_Once);
+    ImGui::SetNextWindowSize( {ABOUT_WIDTH, 0});
+
+    ImGui::Begin("About DearQOI", &mShowAbout, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+    ImGui::TextWrapped("DearIMGUI and QOI image format demo application for Bytes@Work");
+    if (ImGui::Button("Close", {ABOUT_WIDTH, 0})) {
+        Logger::Main()->info("Close about DearQOI clicked!");
+        mShowAbout = false;
+    }
+
+    ImGui::End();
+}
+
+int MainWindow::initSdl() {
+    if (SDL_Init(SDL_INIT_EVERYTHING)) {
         Logger::Main()->error("SDL initialization failed: {}", SDL_GetError());
         return -1;
     }
@@ -56,7 +180,7 @@ int MainWindow::init() {
     }
 
     mSdlGlContext = SDL_GL_CreateContext(mSdlWindow);
-    if(!mSdlGlContext) {
+    if (!mSdlGlContext) {
         Logger::Main()->error("Error creating OpenGl context: {}", SDL_GetError());
         return -1;
     }
@@ -68,14 +192,24 @@ int MainWindow::init() {
 
     glClearColor(0, 0, 0, 1);
 
-    Logger::Main()->info("Main window initialized!");
-
     return 0;
 }
 
-void MainWindow::update() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapWindow(mSdlWindow);
+int MainWindow::initImgui() {
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+
+    if (!ImGui_ImplSDL2_InitForOpenGL(mSdlWindow, mSdlGlContext)) {
+        Logger::Main()->error("Could not initialize DearIMGUI SDL2");
+        return -1;
+    }
+
+    if (!ImGui_ImplOpenGL2_Init()) {
+        Logger::Main()->error("Could not initialize DearIMGUI OpenGL");
+        return -1;
+    }
+
+    return 0;
 }
 
 }
