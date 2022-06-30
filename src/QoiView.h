@@ -18,17 +18,22 @@
 
 #include <string>
 
+#include <SDL_opengl.h>
+#include <qoi.h>
+
 namespace DearQOI {
 
 class QoiView {
 public:
     QoiView(std::string imagePath);
+    ~QoiView();
 
     bool update();
 
 private:
-    bool mIsOpened = true;
     std::string mWindowId;
+    qoi_desc mQoiDesc;
+    GLuint mGlTextureId = 0;
 };
 
 }

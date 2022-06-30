@@ -28,6 +28,7 @@ find_package(OpenGL REQUIRED)
 include_directories(
         libs/imgui/
         libs/spdlog/include
+        libs/qoi
         ${SDL2_INCLUDE_DIRS})
 
 add_executable(

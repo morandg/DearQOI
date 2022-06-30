@@ -170,21 +170,26 @@ void MainWindow::drawAboutWindow() {
 }
 
 void MainWindow::drawLoadQoiDialog() {
-    ImGui::SetNextWindowPos( {50, 50}, ImGuiCond_Appearing);
+    static constexpr int INPUT_BUFFER_SIZE = 512;
+    static char inputText[INPUT_BUFFER_SIZE] = "../images/qoi_logo.qoi";
 
+    ImGui::SetNextWindowPos( {50, 50}, ImGuiCond_Appearing);
     ImGui::Begin("Load QOI image", nullptr,
                  ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
     ImGui::Text("Enter a path to a QOI image");
-
+    ImGui::InputText("##QoiPath", inputText, INPUT_BUFFER_SIZE);
     if (ImGui::Button("OK")) {
-        auto qoiView = std::make_unique<QoiView>("/some/path");
+        auto qoiView = std::make_unique<QoiView>(inputText);
         mQoiViews.push_back(std::move(qoiView));
         mShowLoadQoiDialog = false;
     }
     ImGui::SameLine();
     if (ImGui::Button("Cancel"))
         mShowLoadQoiDialog = false;
+
+    if (!mShowLoadQoiDialog)
+        strncpy(inputText, "../images/qoi_logo.qoi", INPUT_BUFFER_SIZE);
 
     ImGui::End();
 }
