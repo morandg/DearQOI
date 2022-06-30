@@ -3,9 +3,15 @@ A QOI image viewer written with Dear IMGUI.
 
 # Depedencies
 * SDL2
+* OpenGL
 
 # Build
-**TODO**
+```shell
+git submodule update --init
+mkdir build && cd build
+cmake ..
+make -j$(nproc)
+```
 
 # Ressources
 * [QOI](https://qoiformat.org/)
