@@ -90,6 +90,12 @@ void MainWindow::drawWidgets() {
         drawAboutWindow();
     if (mShowLoadQoiDialog)
         drawLoadQoiDialog();
+
+    for (auto qoiView = mQoiViews.begin(); qoiView != mQoiViews.end(); ++qoiView) {
+        if (!(*qoiView)->update()) {
+            qoiView = mQoiViews.erase(qoiView);
+        }
+    }
 }
 
 void MainWindow::drawMainMenu() {
@@ -152,7 +158,8 @@ void MainWindow::drawMainMenu() {
 void MainWindow::drawAboutWindow() {
     ImGui::SetNextWindowPos( {50, 50}, ImGuiCond_Once);
 
-    ImGui::Begin("About DearQOI", &mShowAbout, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Begin("About DearQOI", &mShowAbout,
+                 ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
     ImGui::TextWrapped("DearIMGUI and QOI image format demo application for Bytes@Work");
     if (ImGui::Button("Close", {200, 0})) {
         Logger::Main()->info("Close about DearQOI clicked!");
@@ -170,8 +177,11 @@ void MainWindow::drawLoadQoiDialog() {
 
     ImGui::Text("Enter a path to a QOI image");
 
-    if (ImGui::Button("OK"))
+    if (ImGui::Button("OK")) {
+        auto qoiView = std::make_unique<QoiView>("/some/path");
+        mQoiViews.push_back(std::move(qoiView));
         mShowLoadQoiDialog = false;
+    }
     ImGui::SameLine();
     if (ImGui::Button("Cancel"))
         mShowLoadQoiDialog = false;

@@ -18,6 +18,7 @@ set(DearIMGUI_SOURCES
         libs/imgui/backends/imgui_impl_opengl2.cpp)
 
 set(SOURCES
+        src/QoiView.cpp
         src/MainWindow.cpp
         src/main.cpp)
 

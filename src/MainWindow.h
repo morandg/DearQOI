@@ -16,7 +16,12 @@
 
 #pragma once
 
+#include <memory>
+#include <list>
+
 #include <SDL.h>
+
+#include "QoiView.h"
 
 namespace DearQOI {
 
@@ -38,6 +43,7 @@ private:
     bool mShowImguiAbout = false;
     bool mShowAbout = false;
     bool mShowLoadQoiDialog = false;
+    std::list<std::unique_ptr<QoiView>> mQoiViews;
 
     void drawWidgets();
     void drawMainMenu();
