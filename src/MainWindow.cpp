@@ -120,6 +120,15 @@ void MainWindow::drawMainMenu() {
                 ImGui::EndMenu();
             }
 
+            if (ImGui::BeginMenu("Fonts")) {
+                for (const auto &font: ImGui::GetIO().Fonts->Fonts) {
+                    if (ImGui::MenuItem(font->GetDebugName())) {
+                        ImGui::GetIO().FontDefault = font;
+                    }
+                }
+                ImGui::EndMenu();
+            }
+
             static bool wasFullScreen = false;
             bool isFullScreen = wasFullScreen;
             ImGui::Checkbox("Full screen", &isFullScreen);
@@ -246,6 +255,14 @@ int MainWindow::initImgui() {
         Logger::Main()->error("Could not initialize DearIMGUI OpenGL");
         return -1;
     }
+
+    ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->AddFontFromFileTTF("../libs/imgui/misc/fonts/Cousine-Regular.ttf", 15);
+    io.Fonts->AddFontFromFileTTF("../libs/imgui/misc/fonts/DroidSans.ttf", 15);
+    io.Fonts->AddFontFromFileTTF("../libs/imgui/misc/fonts/Karla-Regular.ttf", 15);
+    io.Fonts->AddFontFromFileTTF("../libs/imgui/misc/fonts/ProggyClean.ttf", 15);
+    io.Fonts->AddFontFromFileTTF("../libs/imgui/misc/fonts/ProggyTiny.ttf", 15);
+    io.Fonts->AddFontFromFileTTF("../libs/imgui/misc/fonts/Roboto-Medium.ttf", 15);
 
     return 0;
 }
