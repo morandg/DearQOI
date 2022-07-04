@@ -129,6 +129,11 @@ void MainWindow::drawMainMenu() {
                 ImGui::EndMenu();
             }
 
+            static ImVec4 bgColor;
+            if (ImGui::ColorEdit3("Background color", (float *)&bgColor)) {
+                glClearColor(bgColor.x, bgColor.y, bgColor.z, 1);
+            }
+
             static bool wasFullScreen = false;
             bool isFullScreen = wasFullScreen;
             ImGui::Checkbox("Full screen", &isFullScreen);
