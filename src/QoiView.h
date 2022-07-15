@@ -19,6 +19,7 @@
 #include <string>
 
 #include <SDL_opengl.h>
+#include <imgui.h>
 #include <qoi.h>
 
 namespace DearQOI {
@@ -34,6 +35,7 @@ private:
     std::string mWindowId;
     qoi_desc mQoiDesc;
     GLuint mGlTextureId = 0;
+    ImVec2 mWindowSize;
 };
 
 }

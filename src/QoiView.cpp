@@ -21,11 +21,15 @@
 #define QOI_IMPLEMENTATION
 
 #include "QoiView.h"
+#include "Logger.h"
 
 namespace DearQOI {
 
+static constexpr float WINDOW_OFFSET = 50;
+
 QoiView::QoiView(std::string imagePath) {
     void* imageData;
+    ImGuiIO& io = ImGui::GetIO();
     std::stringstream ss;
 
     ss << imagePath << "##" << this;
@@ -50,6 +54,20 @@ QoiView::QoiView(std::string imagePath) {
 #endif
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mQoiDesc.width, mQoiDesc.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
     free(imageData);
+
+    if (mQoiDesc.width > io.DisplaySize.x - WINDOW_OFFSET) {
+        mWindowSize.x = io.DisplaySize.x - WINDOW_OFFSET;
+    } else {
+        mWindowSize.x = mQoiDesc.width;
+    }
+    if (mQoiDesc.height > io.DisplaySize.y - WINDOW_OFFSET) {
+        mWindowSize.y = io.DisplaySize.y - WINDOW_OFFSET;
+    } else {
+        mWindowSize.y = mQoiDesc.height;
+    }
+
+    Logger::Main()->debug("Image size {}x{}", mQoiDesc.width, mQoiDesc.width);
+    Logger::Main()->debug("Window size {}x{}", mWindowSize.x, mWindowSize.y);
 }
 
 QoiView::~QoiView() {
@@ -60,10 +78,9 @@ QoiView::~QoiView() {
 bool QoiView::update() {
     bool isOpened = true;
 
-    ImGui::SetNextWindowPos({50, 50}, ImGuiCond_Appearing);
-
+    ImGui::SetNextWindowPos({WINDOW_OFFSET, WINDOW_OFFSET}, ImGuiCond_Appearing);
     if (mGlTextureId)
-        ImGui::SetNextWindowSize(ImVec2(mQoiDesc.width + 30, mQoiDesc.height + 40), ImGuiCond_Appearing);
+        ImGui::SetNextWindowSize(mWindowSize, ImGuiCond_Appearing);
     else
         ImGui::SetNextWindowSize({200, 50}, ImGuiCond_Appearing);
 
