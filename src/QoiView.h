@@ -35,7 +35,8 @@ private:
     std::string mWindowId;
     qoi_desc mQoiDesc;
     GLuint mGlTextureId = 0;
-    ImVec2 mWindowSize;
+    ImVec2 mWindowSize = {200, 80};
+    float mZoomLevel = 1;
 };
 
 }

@@ -58,12 +58,12 @@ QoiView::QoiView(std::string imagePath) {
     if (mQoiDesc.width > io.DisplaySize.x - WINDOW_OFFSET) {
         mWindowSize.x = io.DisplaySize.x - WINDOW_OFFSET;
     } else {
-        mWindowSize.x = mQoiDesc.width;
+        mWindowSize.x = mQoiDesc.width + 50;
     }
     if (mQoiDesc.height > io.DisplaySize.y - WINDOW_OFFSET) {
         mWindowSize.y = io.DisplaySize.y - WINDOW_OFFSET;
     } else {
-        mWindowSize.y = mQoiDesc.height;
+        mWindowSize.y = mQoiDesc.height + 70;
     }
 
     Logger::Main()->debug("Image size {}x{}", mQoiDesc.width, mQoiDesc.width);
@@ -79,16 +79,17 @@ bool QoiView::update() {
     bool isOpened = true;
 
     ImGui::SetNextWindowPos({WINDOW_OFFSET, WINDOW_OFFSET}, ImGuiCond_Appearing);
-    if (mGlTextureId)
-        ImGui::SetNextWindowSize(mWindowSize, ImGuiCond_Appearing);
-    else
-        ImGui::SetNextWindowSize({200, 50}, ImGuiCond_Appearing);
+    ImGui::SetNextWindowSize(mWindowSize, ImGuiCond_Appearing);
 
-    if (ImGui::Begin(mWindowId.c_str(), &isOpened, ImGuiWindowFlags_HorizontalScrollbar)) {
-        if (!mGlTextureId)
-            ImGui::TextWrapped("Could not decode image!");
-        else
-            ImGui::Image((void*)(intptr_t)mGlTextureId, ImVec2(mQoiDesc.width, mQoiDesc.height));
+    ImGui::Begin(mWindowId.c_str(), &isOpened, ImGuiWindowFlags_HorizontalScrollbar);
+    if (!mGlTextureId)
+        ImGui::TextWrapped("Could not decode image!");
+    else {
+        ImGui::SliderFloat("Zoom", &mZoomLevel, 0.01, 5);
+        ImGui::BeginChild("scrolling", {0,0}, false, ImGuiWindowFlags_HorizontalScrollbar);
+        ImGui::Image((void *) (intptr_t) mGlTextureId,
+                     ImVec2(mQoiDesc.width * mZoomLevel, mQoiDesc.height * mZoomLevel));
+        ImGui::EndChild();
     }
     ImGui::End();
 
