@@ -1,17 +1,15 @@
-# Copyright (c) 2022 bytes at work AG. All rights reserved.
 name: Push workflow
 on: push
-
 jobs:
+  say-hello:
+    uses: ./.github/workflows/hello.yml
+    with:
+      who: "Albert"
+
   build:
     name: Build Da funk
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: hello
-        uses: ./.github/workflows/hello.yml
-        with:
-          who: "Albert"
+      - name: build
+        run: "Echo building ..."
