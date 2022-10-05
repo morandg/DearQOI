@@ -25,5 +25,5 @@ jobs:
         run: echo "Hello ${{ inputs.who }}"
 
       - name: Which planet
-        if: ${{ inputs.planet != "" }}
+        if: ${{ inputs.planet != '' }}
         run: echo "We are on ${{ inputs.planet }}"
