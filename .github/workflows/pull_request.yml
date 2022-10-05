@@ -5,6 +5,7 @@ jobs:
     uses: ./.github/workflows/hello.yml
     with:
       who: "Albert"
+      planet: "Mushroom"
 
   build:
     name: Build Da funk
