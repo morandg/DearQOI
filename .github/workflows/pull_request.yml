@@ -12,4 +12,4 @@ jobs:
 
     steps:
       - name: build
-        run: "Echo building ..."
+        run: echo "building ..."
