@@ -1,0 +1,29 @@
+name: Build the application workflow
+on:
+  workflow_call:
+    inputs:
+      who:
+        description: "Who should we say hello"
+        default: "world"
+        required: false
+        type: string
+      planet:
+        description: "Which planet"
+        required: false
+        type: string
+
+jobs:
+  build:
+    name: Build the application
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Say hello
+        run: echo "Hello ${{ inptus.who }}"
+
+      - name: Which planet
+        if: ${{ inptus.planet != "" }}
+        run: echo "We are on ${{ inputs.planet }}"
