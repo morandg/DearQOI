@@ -1,11 +1,4 @@
-# Awesome release
-This "release" is only for testing.
+# Release v0.0.0
+First official release!
 
-Let's see if we can add some hello world example using the REST API:
-```c
-#include <stdio.h>
-
-int main(int argc, char* argv[]) {
-  printf("Hello world\n");
-}
-```
+Who wants to use this application ... :D!
